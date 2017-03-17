@@ -27,8 +27,27 @@ class ImagePickerViewController: UIViewController, AVCapturePhotoCaptureDelegate
     var captureDevice : AVCaptureDevice?
     var previewLayer : AVCaptureVideoPreviewLayer?
     let photoOutput = AVCapturePhotoOutput()
-    let photoSetting = AVCapturePhotoSettings()
     var position:AVCaptureDevicePosition = AVCaptureDevicePosition.front
+    
+    
+    override func viewDidLoad() {
+
+        super.viewDidLoad()
+        
+        // TODO: call captureNewSession here
+        captureNewSession(devicePostion: nil)
+        toggleUI(isInPreviewMode: false)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // hide the navigation bar while we are in this view
+        navigationController?.navigationBar.isHidden = true
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
     
     func captureNewSession(devicePostion: AVCaptureDevicePosition?) {
         
@@ -71,25 +90,6 @@ class ImagePickerViewController: UIViewController, AVCapturePhotoCaptureDelegate
         }
     }
     
-    override func viewDidLoad() {
-
-        super.viewDidLoad()
-        
-        // TODO: call captureNewSession here
-        captureNewSession(devicePostion: nil)
-        toggleUI(isInPreviewMode: false)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        // hide the navigation bar while we are in this view
-        navigationController?.navigationBar.isHidden = true
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     func selectImage(_ image: UIImage) {
         //The image being selected is passed in as "image".
         selectedImage = image
@@ -102,19 +102,18 @@ class ImagePickerViewController: UIViewController, AVCapturePhotoCaptureDelegate
             let photoData = AVCapturePhotoOutput.jpegPhotoDataRepresentation( forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: photoSampleBuffer )
             
                 
-                // Then use this data to create a UIImage, and set it equal to `selectedImage`
+            // Then use this data to create a UIImage, and set it equal to `selectedImage`
             selectedImage = UIImage(data:photoData!)!
             
-                    // This method updates the UI so the send button appears (no need to edit it)
-                    toggleUI(isInPreviewMode: true)
+            // This method updates the UI so the send button appears (no need to edit it)
+            toggleUI(isInPreviewMode: true)
         }
     }
     
     @IBAction func takePhoto(_ sender: UIButton) {
-        // TODO: Replace the following code as per instructions in the spec.
         // Instead of sending a squirrel pic every time, here we will want
         // to start the process of creating a photo from our photoOutput
-        photoOutput.capturePhoto(with: photoSetting, delegate: self)
+        photoOutput.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
         toggleUI(isInPreviewMode: false)
         
     }
